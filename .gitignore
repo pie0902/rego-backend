@@ -60,3 +60,18 @@ compose.yaml
 /mds
 mds/
 !README.md
+
+# --- Portfolio/demo assets (commit) ---
+!dummy.md
+!compose.yaml
+!src/main/resources/application.yml
+!src/main/resources/application-sample.properties
+!src/main/resources/application-demo.properties
+!src/main/resources/application-prod.properties
+
+
+# .gitignore 파일에 추가
+.gradle/
+.gradle-home/
+build/
+*.jar

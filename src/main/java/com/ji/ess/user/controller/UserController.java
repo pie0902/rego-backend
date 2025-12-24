@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,7 @@ public class UserController {
 
     // 승인 대기 사원 목록 조회
     @GetMapping("/pending")
+    @PreAuthorize("hasAnyRole('CEO','MANAGER')")
     @Operation(summary = "승인 대기 사원 목록", description = "대표가 자신의 회사에 소속된 승인 대기 사원을 조회합니다.")
     public List<UserResponseDto> getPendingEmployees(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long companyId = userDetails.getUser().getCompany().getId();
@@ -55,6 +57,7 @@ public class UserController {
 
     // 사원 승인 처리
     @PutMapping("/approve/{id}")
+    @PreAuthorize("hasAnyRole('CEO','MANAGER')")
     @Operation(summary = "사원 승인", description = "대표가 자신의 회사 소속 사원을 승인합니다.")
     public UserResponseDto approveUser(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -67,6 +70,7 @@ public class UserController {
 
     // 전체 사용자 목록 조회
     @GetMapping("/getAllUsers")
+    @PreAuthorize("hasAnyRole('CEO','MANAGER')")
     @Operation(summary = "사용자 목록", description = "등록된 모든 사용자를 조회합니다.")
     public List<UserResponseDto> getAllUsers() {
         return userService.getAllUsers()

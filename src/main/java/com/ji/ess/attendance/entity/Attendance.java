@@ -14,6 +14,7 @@ import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 // 근태 엔티티
 @Getter
@@ -46,6 +47,45 @@ public class Attendance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
+
+    public static Attendance seed(User user,
+                                  Company company,
+                                  CompanyRule rule,
+                                  LocalDate workDate,
+                                  LocalTime checkInTime,
+                                  LocalTime checkOutTime) {
+        Objects.requireNonNull(user, "user");
+        Objects.requireNonNull(company, "company");
+        Objects.requireNonNull(workDate, "workDate");
+        Objects.requireNonNull(checkInTime, "checkInTime");
+        Objects.requireNonNull(checkOutTime, "checkOutTime");
+
+        if (!checkOutTime.isAfter(checkInTime)) {
+            throw new IllegalArgumentException("checkOutTime must be after checkInTime");
+        }
+
+        Attendance attendance = new Attendance();
+        attendance.user = user;
+        attendance.company = company;
+        attendance.workDate = workDate;
+        attendance.checkIn = checkInTime;
+        attendance.checkOut = checkOutTime;
+        attendance.status = determineStatusOnCheckIn(checkInTime, rule);
+        attendance.note = "seeded";
+
+        attendance.workHours = attendance.calculateWorkHours();
+        attendance.shortfallMinutes = null;
+
+        if (rule != null && rule.getWorkType() != null) {
+            if (rule.getWorkType() == WorkType.FIXED) {
+                attendance.applyFixedRuleOnSeed(rule);
+            } else if (rule.getWorkType() == WorkType.FLEXIBLE) {
+                attendance.applyFlexibleRule(rule);
+            }
+        }
+
+        return attendance;
+    }
 
 
     // 출근 처리
@@ -83,6 +123,21 @@ public class Attendance {
 
         attendance.note = "checked in";
         return attendance;
+    }
+
+    private static AttendanceStatus determineStatusOnCheckIn(LocalTime checkInTime, CompanyRule rule) {
+        if (rule == null || rule.getWorkType() == null) {
+            return AttendanceStatus.NORMAL;
+        }
+        if (rule.getWorkType() == WorkType.FLEXIBLE) {
+            return AttendanceStatus.NORMAL;
+        }
+
+        LocalTime standardCheckIn = rule.getStandardCheckIn() != null ? rule.getStandardCheckIn() : LocalTime.of(9, 0);
+        int lateTolerance = rule.getLateTolerance() != null ? rule.getLateTolerance() : 0;
+        LocalTime lateLimit = standardCheckIn.plusMinutes(lateTolerance);
+
+        return checkInTime.isAfter(lateLimit) ? AttendanceStatus.LATE : AttendanceStatus.NORMAL;
     }
     // 퇴근 처리
     public Attendance checkOut(CompanyRule rule) {
@@ -129,6 +184,17 @@ public class Attendance {
         }
         this.shortfallMinutes = null;
         this.note = "checked out";
+    }
+
+    private void applyFixedRuleOnSeed(CompanyRule rule) {
+        LocalTime standardCheckOut = rule.getStandardCheckOut() != null ? rule.getStandardCheckOut() : LocalTime.of(18, 0);
+        int earlyLeaveTolerance = rule.getEarlyLeaveTolerance() != null ? rule.getEarlyLeaveTolerance() : 0;
+        LocalTime earlyLeaveLimit = standardCheckOut.minusMinutes(earlyLeaveTolerance);
+
+        if (this.status != AttendanceStatus.LATE && this.checkOut.isBefore(earlyLeaveLimit)) {
+            this.status = AttendanceStatus.EARLY_LEAVE;
+        }
+        this.shortfallMinutes = null;
     }
 
     // 유연 근무 규칙 반영

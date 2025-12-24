@@ -53,6 +53,10 @@ dependencies {
     //스웨거
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
+    // DB query counting/logging for per-request metrics
+    implementation 'com.github.gavlyukovskiy:datasource-proxy-spring-boot-starter:1.9.0'
+
+    testRuntimeOnly 'com.h2database:h2'
 
 }
 

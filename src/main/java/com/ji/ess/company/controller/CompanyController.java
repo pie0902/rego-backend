@@ -6,6 +6,7 @@ import com.ji.ess.company.entity.Company;
 import com.ji.ess.company.service.CompanyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class CompanyController {
 
     // 개발용 전체 삭제
     @DeleteMapping("/deleteAll")
+    @PreAuthorize("hasAnyRole('CEO','MANAGER')")
     @Operation(summary = "모든 회사 삭제", description = "개발용 도구입니다. 모든 회사 데이터를 삭제합니다.")
     public String deleteAllCompanies() {
         companyService.deleteAllCompanies();
@@ -54,6 +56,7 @@ public class CompanyController {
     }
     // 개발용 초기화
     @DeleteMapping("/truncate")
+    @PreAuthorize("hasAnyRole('CEO','MANAGER')")
     @Operation(summary = "회사 초기화", description = "개발용 도구입니다. 회사 데이터를 삭제하고 ID를 초기화합니다.")
     public String truncateAllCompanies() {
         companyService.truncateAllCompanies();

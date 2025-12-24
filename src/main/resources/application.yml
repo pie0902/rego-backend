@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    default: demo
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: true # per-request 쿼리수 계산용(통계 사용)
+
+metrics:
+  query:
+    # 엔드포인트별 '최적화 전' 기준 쿼리 수(baseline)
+    # 측정 후 아래 숫자를 실제 값으로 변경하세요.
+    baseline:
+      "/api/attendance/me": 0
