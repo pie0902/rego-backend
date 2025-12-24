@@ -21,13 +21,3 @@ services:
 volumes:
   profile-images:
 
-
-
-cat > /opt/ess/.env <<'EOF'
-DOCKERHUB_USERNAME=thunder0902
-SPRING_DATASOURCE_URL=jdbc:mysql://RDS-ENDPOINT:3306/ess?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-DB_USERNAME=root
-DB_PASSWORD=1234
-JWT_SECRET=6lr37j7V1OG18lKLNVYCiq0cze9G5wq9oami1ViAfK0=
-JWT_EXPIRATION_MS=3600000
-EOF
