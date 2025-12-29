@@ -1,43 +1,61 @@
 ## ESS (근태/휴가 관리) 백엔드
 
-포트폴리오용으로 **Swagger UI에서 바로 테스트 가능한 더미데이터(회사/유저/연차/휴가/근태)** 를 자동 생성합니다.
+### 기술 스택
+- Java 21 (JDK 21)
+- Spring Boot 3.5.6 (Spring Web/MVC, Spring Security, Validation)
+- Spring Data JPA (Hibernate)
+- MySQL 8.0 (Docker Compose)
+- JWT (JJWT 0.11.5)
+- Swagger UI (SpringDoc OpenAPI 2.8.5)
+- Gradle
+- Lombok / MapStruct
+- 테스트: JUnit 5, H2
+- 배포/자동화: Docker, Docker Compose, Docker Hub, GitHub Actions, Aws EC2, Aws RDS
 
-### 로컬 데모 실행(추천)
+### 기능 설명
+- 회원 가입/로그인(CEO/사원, JWT 기반 인증)
+- 사원 가입 승인(CEO/관리자)
+- 근태 관리(출근/퇴근, 내 근태 조회)
+- 휴가 관리(신청/내역 조회, 승인/거절)
+- 연차 관리(부여/잔여 조회/차감/복원, 법정 연차 프리뷰)
+- 대시보드(프로필/근태/연차/휴가 통합 조회)
+- 내 정보 관리(정보 수정/비밀번호 변경/프로필 이미지 업로드)
+- 회사/근무 규칙 관리(등록/조회/수정)
 
-1) MySQL 실행
+### API Interactive Playground
 
-```bash
-docker compose -f compose.yaml up -d
-```
+  Swagger UI: http://107.21.56.220:8080/swagger-ui/index.html
 
-2) 백엔드 실행 (기본 프로필: `demo`)
+        모든 API 명세 확인 및 실제 요청 테스트가 가능합니다.
+        ### 테스트 계정
+        - CEO: `ceo1` / `pass1234!`
+        - EMPLOYEE: `emp1` / `pass1234!`
 
-```bash
-./gradlew bootRun
-```
 
-3) Swagger UI
+### Architecture Diagram
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/d538efe3-1325-4202-9c90-f7ec5fda82f7">
+    <img width="900" alt="Architecture Diagram" src="https://github.com/user-attachments/assets/d538efe3-1325-4202-9c90-f7ec5fda82f7" />
+  </a>
+</p>
 
-- `http://localhost:8080/swagger-ui/index.html`
+### ERD Diagram
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/f170c703-b344-4e38-818c-fd98a318c583">
+    <img width="900" alt="ERD Diagram" src="https://github.com/user-attachments/assets/f170c703-b344-4e38-818c-fd98a318c583" />
+  </a>
+</p>
 
-### 테스트 계정(더미)
+### 배포된 서버
+Swagger UI
+- `http://107.21.56.220:8080/swagger-ui/index.html`
 
-더미 계정/비밀번호는 `dummy.md`에 정의되어 있고, 앱 시작 시 자동으로 생성됩니다.
-
-- CEO: `ceo1` / `password123!`
-- EMPLOYEE: `employee1` / `password123!`
 
 ### 5분 체험 시나리오(Swagger 기준)
 
 1) 로그인 토큰 발급: `POST /api/auth/login`
-2) 사원 근태 확인(과거 10영업일 더미): `GET /api/attendance/me`
+2) 사원 근태 확인 `GET /api/attendance/me`
 3) 오늘 출근: `POST /api/attendance/check-in`
 4) 오늘 퇴근: `POST /api/attendance/check-out`
 5) 휴가 신청/조회: `POST /api/leaveRequest/create`, `GET /api/leaveRequest/my`
 6) 대표(CEO)로 대기 휴가 승인: `GET /api/leaveRequest/pending`, `PATCH /api/leaveRequest/update-status`
-
-### 배포(prod)에서 더미데이터
-
-- `prod` 프로필에서는 더미데이터가 비활성화됩니다.
-- 설정 파일: `src/main/resources/application-prod.properties`
-- 배포 컴포즈: `docker-compose.prod.yml`

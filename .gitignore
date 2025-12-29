@@ -62,7 +62,6 @@ mds/
 !README.md
 
 # --- Portfolio/demo assets (commit) ---
-!dummy.md
 !compose.yaml
 !src/main/resources/application.yml
 !src/main/resources/application-sample.properties
