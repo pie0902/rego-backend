@@ -8,6 +8,7 @@ import com.ji.ess.annual_leave_balance.dto.AnnualLeaveUsageRequestDto;
 import com.ji.ess.annual_leave_balance.dto.AnnualLeaveStatutoryPreviewDto;
 import com.ji.ess.annual_leave_balance.service.AnnualLeaveBalanceService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -70,6 +71,7 @@ public class AnnualLeaveBalanceController {
     @Operation(summary = "법정 기준 연차 프리뷰", description = "입사기념일 기준으로 권고 부여일수를 계산합니다. asOf 미지정 시 오늘 기준")
     public AnnualLeaveStatutoryPreviewDto previewStatutory(
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            @Parameter(description = "기준일(asOf) (미지정 시 오늘)", example = "2025-12-29")
             @RequestParam(value = "asOf", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate asOf) {
         AuthenticatedUserDto authenticatedUser = new AuthenticatedUserDto(userDetails);
@@ -82,7 +84,8 @@ public class AnnualLeaveBalanceController {
     @PreAuthorize("hasAnyRole('CEO','MANAGER')")
     @Operation(summary = "법정 기준 연차 프리뷰(관리자)", description = "특정 userId 기준으로 권고 부여일수를 계산합니다.")
     public AnnualLeaveStatutoryPreviewDto previewStatutoryForUser(
-            @RequestParam("userId") Long userId,
+            @Parameter(description = "사용자 ID", example = "1") @RequestParam("userId") Long userId,
+            @Parameter(description = "기준일(asOf) (미지정 시 오늘)", example = "2025-12-29")
             @RequestParam(value = "asOf", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate asOf) {
         LocalDate targetDate = asOf != null ? asOf : LocalDate.now();

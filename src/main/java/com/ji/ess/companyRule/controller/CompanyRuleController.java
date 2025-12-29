@@ -5,6 +5,7 @@ import com.ji.ess.companyRule.dto.CompanyRuleRequestDto;
 import com.ji.ess.companyRule.dto.CompanyRuleResponseDto;
 import com.ji.ess.companyRule.service.CompanyRuleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class CompanyRuleController {
     }
     @GetMapping("/get")
     @Operation(summary = "규칙 조회", description = "회사 ID로 근무 규칙을 조회합니다.")
-    public CompanyRuleResponseDto getRules(@RequestParam Long companyId) {
+    public CompanyRuleResponseDto getRules(@Parameter(description = "회사 ID", example = "1") @RequestParam Long companyId) {
         return companyRuleService.getRules(companyId);
     }
     @PutMapping("/update")
