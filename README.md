@@ -9,6 +9,60 @@ Swagger UI: http://107.21.56.220:8080/swagger-ui/index.html
         - CEO: `ceo1` / `pass1234!`
         - EMPLOYEE: `emp1` / `pass1234!`
 
+
+### Service Workflow
+
+```mermaid
+flowchart TD
+%% 1. CEO Flow
+subgraph CEO["💼 CEO (대표)"]
+A["CEO 가입"] --> B["회사/대표 정보 입력"]
+B --> C["회사 & 계정 생성"]
+C --> D["로그인 (JWT)"]
+
+      D --> E["근무규칙 설정"]
+      D --> F["사원 승인 대기 목록"]
+      F --> G{"승인 처리"}
+      G -- "승인" --> H["권한 부여<br/>(EMP/MGR)"]
+      G -- "거절" --> F
+      
+      D --> I["연차 수동 조정"]
+      D --> J["휴가 승인/거절"]
+    end
+
+    %% 2. System Flow (중앙 배치)
+    subgraph SYSTEM["⚙️ SYSTEM (자동화)"]
+      X["1년 미만 연차 자동 부여<br/>(매일 00:10 스케줄)"]
+      Y["휴가 승인 시<br/>연차 자동 차감"]
+    end
+
+    %% 3. EMP Flow
+    subgraph EMP["👤 사원 (Employee)"]
+      K["사원 가입"] --> L["회사 선택 & 정보 입력"]
+      L --> M["승인 대기"]
+      M -- "승인 완료" --> N["로그인 (JWT)"]
+
+      N --> O["통합 대시보드"]
+      O --> P["출퇴근 체크"]
+      O --> R["휴가 신청"]
+      O --> S["연차 조회/프리뷰"]
+      O --> T["내 정보 관리"]
+    end
+
+    %% Cross-Subgraph Connections
+    H -.-> N
+    R --> J
+    J -- "승인 완료" --> Y
+    Y --> S
+    I --> S
+    M -- "1년 미만" --> X
+    X --> S
+
+    %% Styling
+    style SYSTEM fill:#f9f9f9,stroke:#333,stroke-dasharray: 5 5
+    style CEO fill:#e1f5fe,stroke:#01579b
+    style EMP fill:#fff3e0,stroke:#e65100    
+ ```
 ### 기술 스택
 
 **Backend** 
