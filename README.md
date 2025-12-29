@@ -105,7 +105,7 @@ C --> D["로그인 (JWT)"]
 ### Architecture Diagram
 <p align="center">
   <a href="https://github.com/user-attachments/assets/d538efe3-1325-4202-9c90-f7ec5fda82f7">
-    <img width="900" alt="Architecture Diagram" src="https://github.com/user-attachments/assets/d538efe3-1325-4202-9c90-f7ec5fda82f7" />
+    <img width="900" alt="Image" src="https://github.com/user-attachments/assets/0edb1197-1c2e-4721-aea5-11f1f88a8aa5" />
   </a>
 </p>
 
