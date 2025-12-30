@@ -22,6 +22,7 @@ public class QueryMetricsTestSupport {
     private static final int N_PLUS_ONE_SQL_THRESHOLD = 10;
     private static final double N_PLUS_ONE_REPEAT_RATE = 2.0;
     private static final int MAX_REPEAT_N_PLUS_ONE_HINT = 5;
+    private static final String REPORT_FORMAT = "ess-query-metrics/v2 (auth queries included)";
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
@@ -93,6 +94,7 @@ public class QueryMetricsTestSupport {
         StringBuilder sb = new StringBuilder();
         sb.append("# Query Metrics Report\n\n");
         sb.append("- generatedAt: ").append(generatedAt).append('\n');
+        sb.append("- reportFormat: ").append(REPORT_FORMAT).append('\n');
         sb.append('\n');
         sb.append("## Summary\n\n");
         sb.append("| domain | name | method | path | status | queryCount | queryTimeMs | avgMs | sqlCount | uniqueSql | repeatRate | maxRepeat | n+1 |\n");

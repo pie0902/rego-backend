@@ -2,7 +2,7 @@
 
 ### API Interactive Playground
 
-Swagger UI: http://107.21.56.220:8080/swagger-ui/index.html
+Swagger UI: https://ess.thunderdev.site/swagger-ui/index.html
 
         모든 API 명세 확인 및 실제 요청 테스트가 가능합니다.
         ### 테스트 계정

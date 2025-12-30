@@ -13,7 +13,15 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "ESS API",
-                description = "Employee Self-Service API 문서",
+                description = """
+                        Employee Self-Service API 문서
+
+                        모든 API 명세 확인 및 실제 요청 테스트가 가능합니다.
+
+                        ### 테스트 계정
+                        - CEO: `ceo1` / `pass1234!`
+                        - EMPLOYEE: `emp1` / `pass1234!`
+                        """,
                 version = "v1.0",
                 contact = @Contact(name = "ESS", email = "support@ess.local")
         ),

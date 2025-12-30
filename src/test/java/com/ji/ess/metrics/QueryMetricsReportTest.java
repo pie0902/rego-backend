@@ -315,4 +315,10 @@ class QueryMetricsReportTest {
         Map<String, Object> row = support.call(AttendanceScenarios.attendanceMe(), tokens);
         assertThat(((Number) row.get("queryCount")).longValue()).isLessThanOrEqualTo(2L);
     }
+
+    @Test
+    void leave_request_pending_query_budget() throws Exception {
+        Map<String, Object> row = support.call(QueryScenario.get("leave_request", "leave_request_pending", "/api/leaveRequest/pending", ScenarioAuth.CEO), tokens);
+        assertThat(((Number) row.get("queryCount")).longValue()).isLessThanOrEqualTo(4L);
+    }
 }
